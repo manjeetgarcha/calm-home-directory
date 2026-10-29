@@ -1,0 +1,95 @@
+---
+import { resolveHref } from "../config/affiliate-slots.js";
+import {
+  NOT_PUBLISHED,
+  formatNumber,
+  formatPrice,
+  orientationList,
+  paintSlot,
+} from "../lib/format.js";
+import { toPaintCard } from "../lib/records.js";
+
+interface Props {
+  paint: Record<string, any>;
+}
+
+const { paint } = Astro.props;
+const card = toPaintCard(paint);
+const slot = paintSlot(paint.affiliate_link_slot);
+const viewHref = resolveHref(slot, paint.shade_url);
+const sampleHref = paint.sample_url ? resolveHref(slot, paint.sample_url) : "";
+const aspects = orientationList(paint.orientation);
+---
+
+<article
+  class="card"
+  id={paint.code}
+  data-paint-card
+  data-search={card.search}
+  data-brand={card.brand}
+  data-orientations={card.orientations.join(" ")}
+  data-lrv={card.lrv}
+  data-glare={card.glare}
+  data-psych={card.psych}
+>
+  <p class="card-kicker">
+    <span>{paint.brand}</span>
+    <span>{paint.finish_ref}</span>
+  </p>
+  <h3>{paint.name}</h3>
+  <p class="price">LRV {formatNumber(paint.lrv)}</p>
+  <p class="note">Shade code {paint.code}</p>
+  <dl class="spec-list">
+    <dt>LRV</dt>
+    <dd>{formatNumber(paint.lrv)}</dd>
+    <dt>LRV source</dt>
+    <dd>{paint.lrv_source}</dd>
+    <dt>LRV confidence</dt>
+    <dd>{paint.lrv_confidence}</dd>
+    <dt>Glare score</dt>
+    <dd>{paint.glare_score} · {paint.glare_band}</dd>
+    <dt>Glare index</dt>
+    <dd>{formatNumber(paint.glare_index)}</dd>
+    <dt>Sheen</dt>
+    <dd>{formatNumber(paint.sheen_pct)}%. {paint.sheen_basis}</dd>
+    <dt>Orientation</dt>
+    <dd>{aspects.join(", ")}</dd>
+    <dt>Undertone</dt>
+    <dd>{paint.undertone}</dd>
+    <dt>Temperature</dt>
+    <dd>{paint.temperature}</dd>
+    <dt>Effect tag</dt>
+    <dd>{paint.psych_effect}</dd>
+    <dt>Effect basis</dt>
+    <dd>{paint.psych_basis}</dd>
+  </dl>
+  <p>{paint.maker_description}</p>
+  <details>
+    <summary>Why this aspect is listed</summary>
+    <p class="note">{paint.orientation_basis}</p>
+    <p>{paint.orientation_rationale}</p>
+  </details>
+  <p class="note">
+    <strong>Sample.</strong>
+    {paint.sample_note || NOT_PUBLISHED}
+    {" "}
+    Sample price {formatPrice(paint.sample_price_gbp)}.
+    {paint.url_verified ? ` Link check: ${paint.url_verified}.` : ""}
+  </p>
+  <div class="actions">
+    <a class="button button-primary" href={viewHref} data-affiliate-slot={slot} data-plain-url={paint.shade_url} rel="noopener noreferrer" target="_blank">
+      View product<span class="visually-hidden"> (opens in a new tab)</span>
+    </a>
+    {
+      sampleHref ? (
+        <a class="button button-secondary" href={sampleHref} data-affiliate-slot={slot} data-plain-url={paint.sample_url} rel="noopener noreferrer" target="_blank">
+          Order sample<span class="visually-hidden"> (opens in a new tab)</span>
+        </a>
+      ) : (
+        <button type="button" class="button button-secondary" disabled data-affiliate-slot={slot}>
+          Order sample
+        </button>
+      )
+    }
+  </div>
+</article>

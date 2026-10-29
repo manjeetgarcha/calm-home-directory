@@ -1,0 +1,58 @@
+---
+const base = import.meta.env.BASE_URL;
+const path = Astro.url.pathname;
+const links = [
+  { href: base, label: "Home", key: "home" },
+  { href: `${base}products-and-paint/#products`, label: "Calm Products", key: "products" },
+  { href: `${base}products-and-paint/#paints`, label: "Calm Paints", key: "paints" },
+  { href: `${base}trades/`, label: "Trades", key: "trades", long: "Trades, builders and architects" },
+  { href: `${base}methodology/`, label: "Methodology", key: "methodology" },
+];
+
+function current(link: { href: string; key: string }) {
+  if (link.key === "home") return path === base;
+  if (link.key === "trades") return path === `${base}trades/`;
+  if (link.key === "methodology") return path === `${base}methodology/`;
+  return false;
+}
+---
+
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="wordmark" href={base}>
+      <span class="wordmark-name">Eudaspace</span>
+      <span class="wordmark-sub">Calm Home Directory</span>
+    </a>
+    <nav class="nav" aria-label="Primary" data-primary-nav>
+      {
+        links.map((link) => (
+          <a
+            id={`nav-${link.key}`}
+            href={link.href}
+            aria-label={link.long}
+            aria-current={current(link) ? "page" : undefined}
+            data-nav={link.key}
+          >
+            {link.label}
+          </a>
+        ))
+      }
+    </nav>
+  </div>
+</header>
+<script>
+  const path = location.pathname;
+  if (path.includes("/products-and-paint/")) {
+    const key = location.hash === "#paints" ? "paints" : "products";
+    document.getElementById(`nav-${key}`)?.setAttribute("aria-current", "page");
+  }
+  window.addEventListener("hashchange", () => {
+    for (const key of ["products", "paints"]) {
+      document.getElementById(`nav-${key}`)?.removeAttribute("aria-current");
+    }
+    if (!location.pathname.includes("/products-and-paint/")) return;
+    const key = location.hash === "#paints" ? "paints" : "products";
+    document.getElementById(`nav-${key}`)?.setAttribute("aria-current", "page");
+  });
+</script>

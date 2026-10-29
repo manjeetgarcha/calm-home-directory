@@ -1,0 +1,124 @@
+---
+import { resolveHref } from "../config/affiliate-slots.js";
+import { OUTCOME_FILTERS } from "../lib/match.js";
+import {
+  NOT_PUBLISHED,
+  displayText,
+  formatKelvin,
+  formatNumber,
+  formatPrice,
+  materialGroupClash,
+  splitSource,
+} from "../lib/format.js";
+import { toProductCard } from "../lib/records.js";
+
+interface Props {
+  product: Record<string, any>;
+}
+
+const { product } = Astro.props;
+const card = toProductCard(product);
+const slot = product.brand;
+const viewHref = resolveHref(slot, product.url);
+const sampleHref = product.sample_url ? resolveHref(slot, product.sample_url) : "";
+const source = splitSource(product.spec_source);
+const clash = materialGroupClash(product.material_group, product.material);
+const outcomeItems = card.outcomes.map((id) => OUTCOME_FILTERS.find((item) => item.id === id));
+---
+
+<article
+  class="card"
+  id={product.id}
+  data-product-card
+  data-search={card.search}
+  data-outcomes={card.outcomes.join(" ")}
+  data-kelvin-min={card.kelvinMin ?? ""}
+  data-kelvin-max={card.kelvinMax ?? ""}
+  data-cri={card.cri ?? ""}
+  data-flicker={card.flicker}
+  data-nrc={card.nrc ?? ""}
+  data-alpha-w={card.alphaW ?? ""}
+  data-voc={card.voc}
+  data-material={card.material}
+  data-price={card.price}
+>
+  <p class="card-kicker">
+    <span>{product.brand}</span>
+    <span>{product.category}</span>
+  </p>
+  <h3>{product.name}</h3>
+  <p class="price">{formatPrice(product.price_gbp)}</p>
+  {product.price_note && <p class="price-note">{product.price_note}</p>}
+  <p class="note">{product.subcategory}</p>
+  <ul class="chips">
+    {
+      outcomeItems.map((item) => (
+        <li>
+          <span class="chip">{item.label}</span>
+          <span class="visually-hidden">Filed as {item.source}.</span>
+        </li>
+      ))
+    }
+  </ul>
+  <dl class="spec-list">
+    <dt>Kelvin</dt>
+    <dd class={card.kelvinMin === null ? "missing" : undefined}>{formatKelvin(product.kelvin_min, product.kelvin_max)}</dd>
+    <dt>CRI</dt>
+    <dd class={card.cri === null ? "missing" : undefined}>{formatNumber(product.cri)}</dd>
+    <dt>Flicker</dt>
+    <dd class={card.flicker === "unpublished" ? "missing" : undefined}>{displayText(product.flicker)}</dd>
+    <dt>NRC</dt>
+    <dd class={card.nrc === null ? "missing" : undefined}>{formatNumber(product.nrc)}</dd>
+    <dt><abbr title="alpha w, weighted sound absorption">αw</abbr></dt>
+    <dd class={card.alphaW === null ? "missing" : undefined}>{formatNumber(product.alpha_w)}</dd>
+    <dt>VOC</dt>
+    <dd class="missing">{displayText(product.voc_cert)}</dd>
+    <dt>Material</dt>
+    <dd>{product.material}</dd>
+    <dt>Group filed</dt>
+    <dd>{product.material_group}</dd>
+  </dl>
+  {
+    clash && (
+      <p class="clash">
+        The launch file groups this under {product.material_group}. The material string is different. Both are shown as filed.
+      </p>
+    )
+  }
+  <p>{product.key_specs}</p>
+  <p class="note"><strong>Unknowns.</strong> {product.unknowns ? product.unknowns : NOT_PUBLISHED}</p>
+  <blockquote class="evidence">
+    <p>{product.evidence_note ? product.evidence_note : NOT_PUBLISHED}</p>
+  </blockquote>
+  <div class="actions">
+    <a class="button button-primary" href={viewHref} data-affiliate-slot={slot} data-plain-url={product.url} rel="noopener noreferrer" target="_blank">
+      View product<span class="visually-hidden"> (opens in a new tab)</span>
+    </a>
+    {
+      sampleHref ? (
+        <a class="button button-secondary" href={sampleHref} data-affiliate-slot={slot} data-plain-url={product.sample_url} rel="noopener noreferrer" target="_blank">
+          Order sample<span class="visually-hidden"> (opens in a new tab)</span>
+        </a>
+      ) : (
+        <button type="button" class="button button-secondary" disabled data-affiliate-slot={slot}>
+          Order sample
+        </button>
+      )
+    }
+  </div>
+  {!sampleHref && <p class="note">No sample URL is published for this product.</p>}
+  {
+    source && (
+      <p class="source">
+        Spec source:{" "}
+        {source.href ? (
+          <a href={source.href} rel="noopener noreferrer">
+            {source.text}
+          </a>
+        ) : (
+          source.text
+        )}
+      </p>
+    )
+  }
+</article>
