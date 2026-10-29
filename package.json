@@ -5,11 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "astro build && node scripts/copy-trade-directory.mjs",
     "preview": "astro preview",
     "check:data": "node scripts/check-data.mjs",
     "check:build": "node scripts/check-build.mjs",
-    "test": "node scripts/check-data.mjs && astro build && node scripts/check-build.mjs"
+    "test": "node scripts/check-data.mjs && npm run build && node scripts/check-build.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.4",

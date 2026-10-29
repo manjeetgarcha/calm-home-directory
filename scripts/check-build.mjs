@@ -17,7 +17,6 @@ const pages = {
   home: read("dist/index.html"),
   directory: read("dist/products-and-paint/index.html"),
   method: read("dist/methodology/index.html"),
-  trades: read("dist/trades/index.html"),
   missing: read("dist/404.html"),
 };
 
@@ -42,9 +41,21 @@ assert(pages.home.includes("Work with Harj"), "home missing audit card");
 assert(pages.home.includes("/calm-home-directory/products-and-paint/#products"), "home product link");
 assert(pages.home.includes("/calm-home-directory/products-and-paint/#paints"), "home paint link");
 assert(pages.home.includes("/calm-home-directory/trades/"), "home trades link");
+assert(!pages.home.includes("Coming soon"), "home still says the trade directory is coming soon");
 
-assert(pages.trades.includes("Coming soon"), "trades page missing coming soon");
-assert(pages.trades.includes("I have not published any businesses"), "trades page should not imply listings");
+const trades = fs.readFileSync("dist/trades/index.html", "utf8");
+const about = fs.readFileSync("dist/trades/about.html", "utf8");
+assert(trades === fs.readFileSync("index.html", "utf8"), "published trade directory was modified");
+assert(about === fs.readFileSync("about.html", "utf8"), "published about page was modified");
+assert(fs.readFileSync("dist/trades/app.js", "utf8") === fs.readFileSync("app.js", "utf8"), "app.js changed");
+assert(fs.readFileSync("dist/trades/styles.css", "utf8") === fs.readFileSync("styles.css", "utf8"), "styles.css changed");
+assert(fs.readFileSync("dist/trades/data/listings.json", "utf8") === fs.readFileSync("data/listings.json", "utf8"), "listings changed");
+const listings = JSON.parse(fs.readFileSync("dist/trades/data/listings.json", "utf8"));
+assert(listings.length === 70, `expected 70 listings, got ${listings.length}`);
+assert(trades.includes("The Calm Home Directory"), "trade directory heading missing");
+assert(trades.includes("Find someone for your home"), "trade directory filters missing");
+assert(about.includes("How this directory is made"), "about page missing");
+assert(fs.existsSync("dist/trades/assets/eudaspace-logo.png"), "trade logo missing");
 
 for (const product of products) {
   assert(pages.directory.includes(product.name), `missing product ${product.name}`);

@@ -1,47 +1,47 @@
 # Surrey & London Calm Home Directory
 
-Static directory for [Eudaspace](https://eudaspace.co.uk). The live site is
-[https://manjeetgarcha.github.io/calm-home-directory](https://manjeetgarcha.github.io/calm-home-directory).
+Live site: [https://manjeetgarcha.github.io/calm-home-directory](https://manjeetgarcha.github.io/calm-home-directory).
 
-Three ways in:
+The published site has two parts.
 
-- **Calm Products** and **Calm Paints** at `/products-and-paint/`, filtered from the launch files by biological and sensory specs.
-- **Trades, builders & architects** at `/trades/`. No businesses are listed yet.
-- A £195 floorplan and colour video audit, linked to harj@eudaspace.co.uk.
+- **Hub, Calm Products, and Calm Paints** are an Astro build. Products and paints are at `/products-and-paint/`, filtered from the launch files. Unknown specs are shown as “Not published”. Affiliate URLs, when you have them, go in `src/config/affiliate-slots.js` only.
+- **Trades, builders and architects** is the static directory from `main`: `index.html`, `about.html`, `styles.css`, `app.js`, `data/listings.json`, and `assets/eudaspace-logo.png`. The build copies those files, unchanged, to `/trades/` so the relative links keep working. The homepage card points there.
 
-Unknown specs are shown as “Not published”. Product and sample links use the plain URLs in the data. Affiliate URLs, when you have them, go in `src/config/affiliate-slots.js` only.
+`data/listings.json` is the public trade data (fit scores deliberately excluded). `assets/eudaspace-logo.png` is the Eudaspace wordmark from eudaspace.co.uk (Wix media 2553e1_68694e59...). Full data including hidden fit scores: `/workspace/calm-home-site-private/listings-full.json` and `/workspace/calm-home-directory.csv`.
 
-## Develop
+## Trade directory on its own
+
+From the repo root:
+
+```bash
+python3 -m http.server 8765
+```
+
+Then open http://localhost:8765/ . That serves the trade directory exactly as it is stored.
+
+## Full site
 
 ```bash
 npm install
-npm run dev
-```
-
-Open `http://localhost:4321/calm-home-directory/`.
-
-```bash
 npm test
 npm run preview
 ```
 
-`npm test` checks that the JSON and CSV launch files match, then builds `dist/` and checks the HTML.
+Open `http://localhost:4321/calm-home-directory/`. `npm test` checks the product and paint files, builds the site, copies the trade directory into `dist/trades/`, and checks the HTML.
 
-## Data
+Product and paint sources:
 
 - `src/data/products_launch.json` and `src/data/products_launch.csv`
 - `src/data/paints_launch.json` and `src/data/paints_launch.csv`
 
-The site renders from the JSON. The check script fails if the CSV copy disagrees.
-
 ## GitHub Pages
 
-The workflow `.github/workflows/pages.yml` builds on pull requests and deploys only from `main`.
+`.github/workflows/pages.yml` is the only deploy. It builds on pull requests and deploys the `dist/` folder from `main`.
 
 1. In the GitHub repo, go to **Settings → Pages**.
 2. Under **Build and deployment**, set **Source** to **GitHub Actions**.
-3. Merge this branch to `main`.
+3. Merge to `main`.
 4. Open the **Actions** tab and wait for **Deploy GitHub Pages** to finish.
-5. The site is published at `https://manjeetgarcha.github.io/calm-home-directory/`.
+5. The site is at `https://manjeetgarcha.github.io/calm-home-directory/`.
 
-The Astro `base` is `/calm-home-directory`, so asset, canonical and Open Graph URLs use that path. Do not switch Pages to “Deploy from a branch”; the workflow uploads the built `dist/` folder.
+Do not switch Pages to “Deploy from a branch”.

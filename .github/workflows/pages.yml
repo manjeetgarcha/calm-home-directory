@@ -12,8 +12,8 @@ permissions:
   id-token: write
 
 concurrency:
-  group: pages-${{ github.ref }}
-  cancel-in-progress: true
+  group: pages
+  cancel-in-progress: false
 
 jobs:
   build:
@@ -26,8 +26,11 @@ jobs:
         with:
           node-version: 22
           cache: npm
-      - name: Install and build
+      - name: Install, build, and check
         run: npm ci && npm test
+      - name: Setup Pages
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        uses: actions/configure-pages@v5
       - name: Upload Pages artifact
         if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
         uses: actions/upload-pages-artifact@v3

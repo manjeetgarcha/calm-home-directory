@@ -2,6 +2,7 @@
 import Base from "../layouts/Base.astro";
 import products from "../data/products_launch.json";
 import paints from "../data/paints_launch.json";
+import listings from "../../data/listings.json";
 
 const base = import.meta.env.BASE_URL;
 const description =
@@ -14,9 +15,9 @@ const description =
     <h1>Calm Home Directory</h1>
     <p class="lede">
       There are three ways I can help. Calm Products and Calm Paints are lists you can filter
-      by the biological and sensory specs a maker actually published. Trades is the Surrey
-      &amp; London directory of builders, architects and other trades. If you want me to look
-      at your own room, the floorplan audit is a fourth option.
+      by the biological and sensory specs a maker actually published. Trades is the researched
+      Surrey and South West London directory of builders, architects and other trades. If you
+      want me to look at your own room, the floorplan audit is a fourth option.
     </p>
   </div>
   <div class="wrap">
@@ -50,13 +51,13 @@ const description =
         <p class="eyebrow">03</p>
         <h3>Trades, builders &amp; architects</h3>
         <p>
-          The Surrey &amp; London Calm Home Trade Directory, for builders, architects and other
-          trades. Coming soon. I have not listed any businesses, and I will not invent them
-          to fill the page. If you want to be included, or you are looking for someone, write
-          to me.
+          {listings.length} researched listings for Surrey and South West London: architects,
+          lighting specialists, acoustic and joinery trades, low-VOC decorators, organisers
+          and buying agents. The notes come from each business’s own website. Credentials,
+          insurance and references are not checked yet.
         </p>
         <p>
-          <a class="button button-secondary" href={`${base}trades/`}>Trades, coming soon</a>
+          <a class="button button-secondary" href={`${base}trades/`}>Browse the trade directory</a>
         </p>
       </article>
       <article class="panel way-audit">
