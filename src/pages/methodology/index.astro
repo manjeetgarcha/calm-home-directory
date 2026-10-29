@@ -1,0 +1,241 @@
+---
+import Base from "../../layouts/Base.astro";
+import products from "../../data/products_launch.json";
+import paints from "../../data/paints_launch.json";
+import { OUTCOME_FILTERS, glareScoreFromIndex } from "../../lib/match.js";
+import { materialGroupClash } from "../../lib/format.js";
+
+const base = import.meta.env.BASE_URL;
+const description =
+  "How the Eudaspace directory reads Kelvin, CRI, flicker, acoustics, VOC, LRV and glare. Unknowns stay Not published. Evidence notes are quoted from the launch files.";
+
+const notes = new Map();
+for (const product of products) {
+  const note = (product.evidence_note || "").trim();
+  if (!notes.has(note)) notes.set(note, []);
+  notes.get(note).push(product.name);
+}
+
+const glareRows = [...new Map(paints.map((paint) => [paint.glare_score, paint.glare_band])).entries()]
+  .sort((a, b) => a[0] - b[0])
+  .map(([score, band]) => {
+    const group = paints.filter((paint) => paint.glare_score === score);
+    const indexes = group.map((paint) => paint.glare_index);
+    const lrvs = group.map((paint) => paint.lrv);
+    return {
+      score,
+      band,
+      count: group.length,
+      indexMin: Math.min(...indexes),
+      indexMax: Math.max(...indexes),
+      lrvMin: Math.min(...lrvs),
+      lrvMax: Math.max(...lrvs),
+    };
+  });
+
+const psychBases = [...new Set(paints.map((paint) => paint.psych_basis))];
+const orientationBases = [...new Set(paints.map((paint) => paint.orientation_basis))];
+const clashes = products.filter((product) => materialGroupClash(product.material_group, product.material));
+const maxGap = Math.max(
+  ...paints.map((paint) => Math.abs(paint.lrv * (1 + paint.sheen_pct / 20) - paint.glare_index)),
+);
+---
+
+<Base title="How the specs are read | Eudaspace Calm Home Directory" description={description}>
+  <article class="wrap page-intro method">
+    <nav aria-label="Breadcrumb">
+      <ol class="crumb">
+        <li><a href={base}>Home</a></li>
+        <li aria-current="page">Methodology</li>
+      </ol>
+    </nav>
+    <p class="eyebrow">Science-cautious, on purpose</p>
+    <h1>How I read these numbers</h1>
+    <p class="lede">
+      This is neurodesign, not interior design. The research behind light, sound and attention
+      is real, and I would rather understate it than dress it up. You will not get an invented
+      percentage or a wellness score for a hallway. You get the figure a maker published, the
+      evidence note stored with it, and Not published where that is the honest gap.
+    </p>
+    <p>
+      The pages are rendered from <code>products_launch</code> ({products.length} rows) and
+      <code>paints_launch</code> ({paints.length} rows). The JSON and CSV copies of each file
+      are both in the repo. I do not recalculate a spec and then hide the stored one.
+    </p>
+
+    <h2>What “Not published” means</h2>
+    <p>
+      A blank, a null, or the word “unknown” in the launch file is shown as Not published.
+      I do not guess Kelvin, CRI, flicker, NRC, αw or a VOC certificate. The one VOC cell that
+      says unknown and then mentions low-VOC adhesive advice is shown as Not published, with
+      that note kept. It is not a certificate.
+    </p>
+
+    <h2>Outcome names</h2>
+    <p>
+      The product file uses five tags. The filters use plainer names for the same tags. The
+      card still carries the filed wording for a screen reader.
+    </p>
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">Filter</th>
+          <th scope="col">Filed as</th>
+        </tr>
+      </thead>
+      <tbody>
+        {
+          OUTCOME_FILTERS.map((item) => (
+            <tr>
+              <td>{item.label}</td>
+              <td>{item.source}</td>
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+
+    <h2>Light, sound, VOC and material</h2>
+    <p>
+      Kelvin filters keep a product when its published minimum-to-maximum range overlaps the
+      band you pick. A dim-to-warm bulb can match more than one band. If Kelvin was not
+      published, it only matches “Kelvin not published”.
+    </p>
+    <p>
+      CRI is shown only when the file has a number. The flicker filter called “under 5%” matches
+      the rows whose flicker cell contains “&lt;5%”. Some of those makers also say flicker-free.
+      A cell that only says unknown is not treated as flicker-free.
+    </p>
+    <p>
+      Acoustic filters use NRC and αw. Almost every product has neither. I do not turn “not
+      applicable” into a zero.
+    </p>
+    <p>
+      Material filters use the material string. The material group is also printed, as filed.
+      {clashes.length === 0
+        ? "No material-group clash is in this file."
+        : `${clashes.length} products are filed under Glass / LED while the material string describes something else. I have not corrected the file.`}
+      {clashes.length > 0 && (
+        <span>
+          {" "}
+          Those products are {clashes.map((product) => product.name).join("; ")}.
+        </span>
+      )}
+    </p>
+
+    <h2>Paint: LRV, orientation, effect</h2>
+    <p>
+      LRV on the card is the number in the file. The source and confidence are printed with it.
+      LRV bands in the filter (under 20, 20 to under 40, and so on) are cuts I use so you can
+      narrow the list. They are not names the paint makers publish.
+    </p>
+    <p>Orientation is stored in two ways, and the card quotes the basis it was given:</p>
+    <ul>
+      {orientationBases.map((basis) => <li>{basis}</li>)}
+    </ul>
+    <p>
+      A north, south, east or west filter matches a shade when that aspect is one of the
+      aspects in its orientation cell. Several shades are tagged for more than one aspect.
+    </p>
+    <p>
+      Psychological effect is an editorial tag. The file says so. I am not treating these as
+      clinical effects. The bases in this launch file are:
+    </p>
+    <ul>
+      {psychBases.map((basis) => <li>{basis}</li>)}
+    </ul>
+
+    <h2>Glare score method</h2>
+    <p>
+      Glare score is not a measured disability-glare result, and it is not a British Standard.
+      It is a figure stored beside each shade so these thirty can be compared.
+    </p>
+    <p>
+      For every shade, <code>sheen_pct</code> is 3. The file says that 3% is assumed for a
+      flat-matt class, because the maker’s sheen percentage was not captured. I have not
+      replaced that assumption with a measured gloss.
+    </p>
+    <p>
+      The stored glare index tracks LRV × (1 + sheen_pct / 20). At 3% sheen that factor is
+      1.15, so the index sits on LRV × 1.15. Across this file the largest gap between the
+      stored index and that product is {maxGap.toFixed(3)}, which is one rounding step at one
+      decimal place. On an exact half, the stored tenth can sit 0.1 either side of a
+      round-half choice. The card shows the stored glare index, not a number I recalculate.
+    </p>
+    <p>
+      The score from 1 to 5, and the band name, are stored too. In this file they line up with
+      the index if you cut it at 22, 40, 65 and 82:
+    </p>
+    <ul>
+      <li>Under 22: score 1, Very low</li>
+      <li>22 to under 40: score 2, Low</li>
+      <li>40 to under 65: score 3, Moderate</li>
+      <li>65 to under 82: score 4, Higher</li>
+      <li>82 and over: score 5, Highest</li>
+    </ul>
+    <p>
+      Those cuts reproduce every score in the file. They sit in the gaps between neighbouring
+      shades. They are a reading of this file, not a threshold I found in a lighting standard.
+      A higher score means a lighter surface on this index, and so more chance of glare. It
+      does not tell you that a room will be uncomfortable.
+    </p>
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">Score</th>
+          <th scope="col">Band</th>
+          <th scope="col">Shades</th>
+          <th scope="col">Glare index in file</th>
+          <th scope="col">LRV in file</th>
+        </tr>
+      </thead>
+      <tbody>
+        {
+          glareRows.map((row) => (
+            <tr>
+              <td>{row.score}</td>
+              <td>{row.band}</td>
+              <td>{row.count}</td>
+              <td>
+                {row.indexMin}–{row.indexMax}
+              </td>
+              <td>
+                {row.lrvMin}–{row.lrvMax}
+              </td>
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+    <p>
+      I checked that those cuts match the stored score for every shade
+      {paints.every((paint) => glareScoreFromIndex(paint.glare_index) === paint.glare_score)
+        ? " (they do, in this launch file)."
+        : "."}
+    </p>
+
+    <h2>Evidence notes</h2>
+    <p>
+      These are the evidence notes stored on the products, quoted, with the products they
+      belong to. Where the file has no note, I have not written one.
+    </p>
+    {
+      [...notes.entries()].map(([note, names]) => (
+        <section>
+          {note ? <blockquote class="evidence">{note}</blockquote> : <p>Not published.</p>}
+          <p class="note">{names.join("; ")}</p>
+        </section>
+      ))
+    }
+
+    <h2>What this is not</h2>
+    <p>
+      This is not medical, sleep-clinic or diagnostic advice. Sleep, attention and cortisol
+      appear only where an evidence note in the file mentions them, and those notes are
+      cautious on purpose. Prices are the crawl prices in the file, not a live shop. Sample
+      links use the sample URL in the file. If that note says no sample variant was found, the
+      card says so, even when the URL is the shade page. Affiliate programme names in the data
+      files are not turned into tracking links.
+    </p>
+  </article>
+</Base>

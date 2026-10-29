@@ -1,0 +1,74 @@
+---
+import Base from "../layouts/Base.astro";
+import products from "../data/products_launch.json";
+import paints from "../data/paints_launch.json";
+import listings from "../../data/listings.json";
+
+const base = import.meta.env.BASE_URL;
+const description =
+  "Three ways Eudaspace can help: Calm Products, Calm Paints, and a Surrey and London trade directory of builders and architects. Neurodesign, not interior design.";
+---
+
+<Base title="Surrey & London Calm Home Directory" description={description}>
+  <div class="wrap page-intro">
+    <p class="eyebrow">Neurodesign, not interior design</p>
+    <h1>Calm Home Directory</h1>
+    <p class="lede">
+      There are three ways I can help. Calm Products and Calm Paints are lists you can filter
+      by the biological and sensory specs a maker actually published. Trades is the researched
+      Surrey and South West London directory of builders, architects and other trades. If you
+      want me to look at your own room, the floorplan audit is a fourth option.
+    </p>
+  </div>
+  <div class="wrap">
+    <h2>Three ways Eudaspace can help</h2>
+    <div class="home-grid">
+      <article class="panel">
+        <p class="eyebrow">01</p>
+        <h3>Calm Products</h3>
+        <p>
+          {products.length} lamps, panels, rugs and other homeware pieces. I filter them by
+          outcome, Kelvin, CRI, flicker, acoustic rating, VOC, material and price. If a number
+          was not published, the card says so. I am not scoring how a product looks.
+        </p>
+        <p>
+          <a class="button button-primary" href={`${base}products-and-paint/#products`}>Browse Calm Products</a>
+        </p>
+      </article>
+      <article class="panel">
+        <p class="eyebrow">02</p>
+        <h3>Calm Paints</h3>
+        <p>
+          {paints.length} UK shades, filtered by brand, room orientation (north, south, east,
+          west), LRV band, glare score and the psychological-effect tag stored in the file.
+          The effect tags are editorial. I keep the basis next to them.
+        </p>
+        <p>
+          <a class="button button-primary" href={`${base}products-and-paint/#paints`}>Browse Calm Paints</a>
+        </p>
+      </article>
+      <article class="panel">
+        <p class="eyebrow">03</p>
+        <h3>Trades, builders &amp; architects</h3>
+        <p>
+          {listings.length} researched listings for Surrey and South West London: architects,
+          lighting specialists, acoustic and joinery trades, low-VOC decorators, organisers
+          and buying agents. The notes come from each business’s own website. Credentials,
+          insurance and references are not checked yet.
+        </p>
+        <p>
+          <a class="button button-secondary" href={`${base}trades/`}>Browse the trade directory</a>
+        </p>
+      </article>
+      <article class="panel way-audit">
+        <p class="eyebrow">Work with Harj</p>
+        <h3>£195 floorplan &amp; colour audit</h3>
+        <p>
+          <a href="mailto:harj@eudaspace.co.uk">
+            Not sure how your room's light interacts with your furniture? Book a £195 Eudaspace Floorplan &amp; Colour Video Audit
+          </a>
+        </p>
+      </article>
+    </div>
+  </div>
+</Base>

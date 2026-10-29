@@ -1,0 +1,259 @@
+---
+import Base from "../../layouts/Base.astro";
+import ProductCard from "../../components/ProductCard.astro";
+import PaintCard from "../../components/PaintCard.astro";
+import products from "../../data/products_launch.json";
+import paints from "../../data/paints_launch.json";
+import {
+  ACOUSTIC_OPTIONS,
+  CRI_OPTIONS,
+  FLICKER_OPTIONS,
+  KELVIN_OPTIONS,
+  LRV_OPTIONS,
+  ORIENTATIONS,
+  OUTCOME_FILTERS,
+  PRICE_OPTIONS,
+  VOC_OPTIONS,
+} from "../../lib/match.js";
+
+const base = import.meta.env.BASE_URL;
+const description =
+  "Eudaspace directory of UK homeware and paint shades, filtered by biological and sensory specs: Kelvin, CRI, flicker, acoustics, VOC, LRV and glare. Unknowns stay Not published.";
+
+const materials = [...new Set(products.map((product) => product.material))].sort((a, b) =>
+  a.localeCompare(b, "en"),
+);
+const brands = [...new Set(paints.map((paint) => paint.brand))];
+const psychEffects = [...new Set(paints.map((paint) => paint.psych_effect))];
+const glareOptions = [...new Map(paints.map((paint) => [paint.glare_score, paint.glare_band])).entries()].sort(
+  (a, b) => a[0] - b[0],
+);
+
+const ld = {
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  name: "Eudaspace Calm Homeware & Paint Directory",
+  description,
+  url: "https://manjeetgarcha.github.io/calm-home-directory/products-and-paint/",
+  isPartOf: {
+    "@type": "WebSite",
+    name: "Surrey & London Calm Home Directory",
+    url: "https://manjeetgarcha.github.io/calm-home-directory/",
+  },
+};
+---
+
+<Base title="Eudaspace Calm Homeware & Paint Directory" description={description}>
+  <script type="application/ld+json" set:html={JSON.stringify(ld)} />
+  <div class="wrap page-intro">
+    <nav aria-label="Breadcrumb">
+      <ol class="crumb">
+        <li><a href={base}>Home</a></li>
+        <li aria-current="page">Products and paint</li>
+      </ol>
+    </nav>
+    <p class="eyebrow">Neurodesign, not interior design</p>
+    <h1>Eudaspace Calm Homeware &amp; Paint Directory</h1>
+    <p class="lede">
+      I filter this list by biological and sensory specs, not by how a product is meant to look.
+      {products.length} products and {paints.length} shades are copied from the launch files. If a
+      maker has not published a figure, the card says Not published. I would rather leave a gap
+      than invent a wellness score.
+    </p>
+    <p>
+      <a href={`${base}methodology/`}>How I read these numbers</a>
+    </p>
+  </div>
+
+  <div class="wrap tabs" data-directory>
+    <div class="tablist" role="tablist" aria-label="Calm Products and Calm Paints">
+      <button type="button" role="tab" id="tab-products" aria-controls="panel-products" aria-selected="true">
+        Calm Products
+      </button>
+      <button type="button" role="tab" id="tab-paints" aria-controls="panel-paints" aria-selected="false" tabindex="-1">
+        Calm Paints
+      </button>
+    </div>
+
+    <div role="tabpanel" id="panel-products" aria-labelledby="tab-products">
+      <div class="directory-layout">
+        <form class="filters" data-product-filters aria-describedby="product-hint" onsubmit="return false">
+          <h2>Filter products</h2>
+          <p id="product-hint" class="hint">
+            Tick any outcomes you want. Every other filter has to match as well. A Kelvin band
+            keeps products whose published range overlaps it.
+          </p>
+          <label class="search-field">
+            <span>Search products</span>
+            <input type="search" name="search" placeholder="Brand, name, or spec" autocomplete="off" />
+          </label>
+          <fieldset>
+            <legend>Outcome</legend>
+            <div class="checks">
+              {
+                OUTCOME_FILTERS.map((item) => (
+                  <label class="check">
+                    <input type="checkbox" name="outcome" value={item.id} />
+                    <span>
+                      {item.label}
+                      <span class="visually-hidden">Filed as {item.source}.</span>
+                    </span>
+                  </label>
+                ))
+              }
+            </div>
+          </fieldset>
+          <label class="field">
+            <span>Kelvin range</span>
+            <select name="kelvin">
+              {KELVIN_OPTIONS.map((item) => <option value={item.id}>{item.label}</option>)}
+            </select>
+          </label>
+          <label class="field">
+            <span>CRI</span>
+            <select name="cri">
+              {CRI_OPTIONS.map((item) => <option value={item.id}>{item.label}</option>)}
+            </select>
+          </label>
+          <label class="field">
+            <span>Flicker-free</span>
+            <select name="flicker">
+              {FLICKER_OPTIONS.map((item) => <option value={item.id}>{item.label}</option>)}
+            </select>
+          </label>
+          <label class="field">
+            <span>Acoustic rating (NRC / αw)</span>
+            <select name="acoustic">
+              {ACOUSTIC_OPTIONS.map((item) => <option value={item.id}>{item.label}</option>)}
+            </select>
+          </label>
+          <label class="field">
+            <span>VOC</span>
+            <select name="voc">
+              {VOC_OPTIONS.map((item) => <option value={item.id}>{item.label}</option>)}
+            </select>
+          </label>
+          <details class="material-details">
+            <summary>Material</summary>
+            <div class="checks">
+              {
+                materials.map((material) => (
+                  <label class="check">
+                    <input type="checkbox" name="material" value={material} />
+                    <span>{material}</span>
+                  </label>
+                ))
+              }
+            </div>
+          </details>
+          <label class="field">
+            <span>Price</span>
+            <select name="price">
+              {PRICE_OPTIONS.map((item) => <option value={item.id}>{item.label}</option>)}
+            </select>
+          </label>
+          <button class="reset" type="button">Clear product filters</button>
+        </form>
+        <p class="results-bar" data-product-count aria-live="polite">
+          {products.length} of {products.length} products
+        </p>
+        <div class="results">
+          <p class="empty" data-product-empty hidden>
+            Nothing in this launch list matches. Clear a filter or try a shorter search.
+          </p>
+          <div class="cards">
+            {products.map((product) => <ProductCard product={product} />)}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div role="tabpanel" id="panel-paints" aria-labelledby="tab-paints" hidden>
+      <div class="directory-layout">
+        <form class="filters" data-paint-filters aria-describedby="paint-hint" onsubmit="return false">
+          <h2>Filter paints</h2>
+          <p id="paint-hint" class="hint">
+            Tick any brands, aspects or effects. Every group you use has to match. LRV bands
+            are cuts of the published number, not colour names.
+          </p>
+          <label class="search-field">
+            <span>Search paints</span>
+            <input type="search" name="search" placeholder="Shade, brand, or description" autocomplete="off" />
+          </label>
+          <fieldset>
+            <legend>Brand</legend>
+            <div class="checks">
+              {
+                brands.map((brand) => (
+                  <label class="check">
+                    <input type="checkbox" name="brand" value={brand} />
+                    <span>{brand}</span>
+                  </label>
+                ))
+              }
+            </div>
+          </fieldset>
+          <fieldset>
+            <legend>UK room orientation</legend>
+            <div class="checks">
+              {
+                ORIENTATIONS.map((aspect) => (
+                  <label class="check">
+                    <input type="checkbox" name="orientation" value={aspect.id} />
+                    <span>{aspect.label}</span>
+                  </label>
+                ))
+              }
+            </div>
+          </fieldset>
+          <label class="field">
+            <span>LRV band</span>
+            <select name="lrv">
+              {LRV_OPTIONS.map((item) => <option value={item.id}>{item.label}</option>)}
+            </select>
+          </label>
+          <label class="field">
+            <span>Glare score</span>
+            <select name="glare">
+              <option value="any">Any glare score</option>
+              {glareOptions.map(([score, band]) => <option value={String(score)}>{score} · {band}</option>)}
+            </select>
+          </label>
+          <fieldset>
+            <legend>Psychological effect</legend>
+            <div class="checks">
+              {
+                psychEffects.map((effect) => (
+                  <label class="check">
+                    <input type="checkbox" name="psych" value={effect} />
+                    <span>{effect}</span>
+                  </label>
+                ))
+              }
+            </div>
+          </fieldset>
+          <p class="hint">Effect tags are editorial labels from the file, not clinical claims.</p>
+          <button class="reset" type="button">Clear paint filters</button>
+        </form>
+        <p class="results-bar" data-paint-count aria-live="polite">
+          {paints.length} of {paints.length} shades
+        </p>
+        <div class="results">
+          <p class="empty" data-paint-empty hidden>
+            Nothing in this launch list matches. Clear a filter or try a shorter search.
+          </p>
+          <div class="cards">
+            {paints.map((paint) => <PaintCard paint={paint} />)}
+          </div>
+        </div>
+      </div>
+    </div>
+    <noscript>
+      <p class="hint">Filters need JavaScript. Every product and shade is still listed on this page.</p>
+    </noscript>
+  </div>
+  <script>
+    import { initDirectory } from "../../scripts/directory.js";
+    initDirectory();
+  </script>
+</Base>
