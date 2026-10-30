@@ -44,6 +44,12 @@
 
 .filters.filters-directory {
   align-items: start;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+}
+
+.filters.filters-directory > .search-field {
+  grid-column: 1 / -1;
+  max-width: 32rem;
 }
 
 .filters.filters-directory > h2,

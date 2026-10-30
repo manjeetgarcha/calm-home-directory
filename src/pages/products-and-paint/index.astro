@@ -100,7 +100,7 @@ const ld = {
                     <input type="checkbox" name="outcome" value={item.id} />
                     <span>
                       {item.label}
-                      <span class="visually-hidden">Filed as {item.source}.</span>
+                      <span class="vh">Filed as {item.source}.</span>
                     </span>
                   </label>
                 ))
@@ -137,6 +137,12 @@ const ld = {
               {VOC_OPTIONS.map((item) => <option value={item.id}>{item.label}</option>)}
             </select>
           </label>
+          <label class="field">
+            <span>Price</span>
+            <select name="price">
+              {PRICE_OPTIONS.map((item) => <option value={item.id}>{item.label}</option>)}
+            </select>
+          </label>
           <details class="material-details">
             <summary>Material</summary>
             <div class="checks">
@@ -150,12 +156,6 @@ const ld = {
               }
             </div>
           </details>
-          <label class="field">
-            <span>Price</span>
-            <select name="price">
-              {PRICE_OPTIONS.map((item) => <option value={item.id}>{item.label}</option>)}
-            </select>
-          </label>
           <button class="btn ghost reset" type="button">Clear product filters</button>
         </form>
         <p class="count" data-product-count aria-live="polite">
