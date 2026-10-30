@@ -1,43 +1,48 @@
 ---
+import logo from "../../assets/eudaspace-logo.png";
+
 const base = import.meta.env.BASE_URL;
 const path = Astro.url.pathname;
 const links = [
   { href: base, label: "Home", key: "home" },
-  { href: `${base}products-and-paint/#products`, label: "Calm Products", key: "products" },
-  { href: `${base}products-and-paint/#paints`, label: "Calm Paints", key: "paints" },
-  { href: `${base}trades/`, label: "Trades", key: "trades", long: "Trades, builders and architects" },
+  { href: `${base}products-and-paint/#products`, label: "Products", key: "products" },
+  { href: `${base}products-and-paint/#paints`, label: "Paints", key: "paints" },
+  { href: `${base}trades/`, label: "Trades", key: "trades" },
   { href: `${base}methodology/`, label: "Methodology", key: "methodology" },
+  { href: "mailto:harj@eudaspace.co.uk", label: "Work with Harj", key: "audit" },
 ];
 
 function current(link: { href: string; key: string }) {
   if (link.key === "home") return path === base;
-  if (link.key === "trades") return path === `${base}trades/`;
-  if (link.key === "methodology") return path === `${base}methodology/`;
+  if (link.key === "trades") return path.startsWith(`${base}trades`);
+  if (link.key === "methodology") return path.startsWith(`${base}methodology`);
   return false;
 }
 ---
 
-<a class="skip-link" href="#main">Skip to content</a>
-<header class="site-header">
-  <div class="wrap header-inner">
-    <a class="wordmark" href={base}>
-      <span class="wordmark-name">Eudaspace</span>
-      <span class="wordmark-sub">Calm Home Directory</span>
+<a class="skip" href="#main">Skip to main content</a>
+<header class="site">
+  <div class="wrap">
+    <a class="brand" href={base} aria-label="Eudaspace Calm Home Directory, home">
+      <img src={logo.src} alt="Eudaspace" width="124" height="34" />
     </a>
-    <nav class="nav" aria-label="Primary" data-primary-nav>
-      {
-        links.map((link) => (
-          <a
-            id={`nav-${link.key}`}
-            href={link.href}
-            aria-label={link.long}
-            aria-current={current(link) ? "page" : undefined}
-            data-nav={link.key}
-          >
-            {link.label}
-          </a>
-        ))
-      }
+    <nav aria-label="Main">
+      <ul>
+        {
+          links.map((link) => (
+            <li>
+              <a
+                id={link.key === "audit" ? undefined : `nav-${link.key}`}
+                href={link.href}
+                aria-label={link.key === "audit" ? "Work with Harj, the £195 floorplan and colour audit" : undefined}
+                aria-current={current(link) ? "page" : undefined}
+              >
+                {link.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
     </nav>
   </div>
 </header>
