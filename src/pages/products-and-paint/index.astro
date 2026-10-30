@@ -45,39 +45,43 @@ const ld = {
 
 <Base title="Eudaspace Calm Homeware & Paint Directory" description={description}>
   <script type="application/ld+json" set:html={JSON.stringify(ld)} />
-  <div class="wrap page-intro">
-    <nav aria-label="Breadcrumb">
-      <ol class="crumb">
-        <li><a href={base}>Home</a></li>
-        <li aria-current="page">Products and paint</li>
-      </ol>
-    </nav>
-    <p class="eyebrow">Neurodesign, not interior design</p>
-    <h1>Eudaspace Calm Homeware &amp; Paint Directory</h1>
-    <p class="lede">
-      I filter this list by biological and sensory specs, not by how a product is meant to look.
-      {products.length} products and {paints.length} shades are copied from the launch files. If a
-      maker has not published a figure, the card says Not published. I would rather leave a gap
-      than invent a wellness score.
-    </p>
-    <p>
-      <a href={`${base}methodology/`}>How I read these numbers</a>
-    </p>
-  </div>
+  <section class="hero">
+    <div class="wrap">
+      <nav aria-label="Breadcrumb">
+        <ol class="crumb">
+          <li><a href={base}>Home</a></li>
+          <li aria-current="page">Products and paint</li>
+        </ol>
+      </nav>
+      <p class="eyebrow">Neurodesign, not interior design</p>
+      <h1>Eudaspace Calm Homeware &amp; Paint Directory</h1>
+      <p class="lead">
+        I filter this list by biological and sensory specs, not by how a product is meant to look.
+        {products.length} products and {paints.length} shades are copied from the launch files. If a
+        maker has not published a figure, the card says Not published. I would rather leave a gap
+        than invent a wellness score.
+      </p>
+      <div class="btns">
+        <a class="btn ghost" href={`${base}methodology/`}>How I read these numbers</a>
+      </div>
+    </div>
+  </section>
 
-  <div class="wrap tabs" data-directory>
-    <div class="tablist" role="tablist" aria-label="Calm Products and Calm Paints">
-      <button type="button" role="tab" id="tab-products" aria-controls="panel-products" aria-selected="true">
-        Calm Products
+  <section>
+    <div class="wrap" data-directory>
+    <div class="cats" role="tablist" aria-label="Calm Products and Calm Paints">
+      <button type="button" role="tab" id="tab-products" aria-controls="products" aria-selected="true">
+        <span class="t">Calm Products</span>
+        <span class="n">{products.length} pieces, filtered by published specs</span>
       </button>
-      <button type="button" role="tab" id="tab-paints" aria-controls="panel-paints" aria-selected="false" tabindex="-1">
-        Calm Paints
+      <button type="button" role="tab" id="tab-paints" aria-controls="paints" aria-selected="false" tabindex="-1">
+        <span class="t">Calm Paints</span>
+        <span class="n">{paints.length} UK shades</span>
       </button>
     </div>
 
-    <div role="tabpanel" id="panel-products" aria-labelledby="tab-products">
-      <div class="directory-layout">
-        <form class="filters" data-product-filters aria-describedby="product-hint" onsubmit="return false">
+    <div role="tabpanel" id="products" aria-labelledby="tab-products">
+        <form class="filters filters-directory" data-product-filters aria-describedby="product-hint" onsubmit="return false">
           <h2>Filter products</h2>
           <p id="product-hint" class="hint">
             Tick any outcomes you want. Every other filter has to match as well. A Kelvin band
@@ -152,25 +156,21 @@ const ld = {
               {PRICE_OPTIONS.map((item) => <option value={item.id}>{item.label}</option>)}
             </select>
           </label>
-          <button class="reset" type="button">Clear product filters</button>
+          <button class="btn ghost reset" type="button">Clear product filters</button>
         </form>
-        <p class="results-bar" data-product-count aria-live="polite">
+        <p class="count" data-product-count aria-live="polite">
           {products.length} of {products.length} products
         </p>
-        <div class="results">
-          <p class="empty" data-product-empty hidden>
-            Nothing in this launch list matches. Clear a filter or try a shorter search.
-          </p>
-          <div class="cards">
-            {products.map((product) => <ProductCard product={product} />)}
-          </div>
+        <p class="status" data-product-empty hidden>
+          Nothing in this launch list matches. Clear a filter or try a shorter search.
+        </p>
+        <div class="grid">
+          {products.map((product) => <ProductCard product={product} />)}
         </div>
-      </div>
     </div>
 
-    <div role="tabpanel" id="panel-paints" aria-labelledby="tab-paints" hidden>
-      <div class="directory-layout">
-        <form class="filters" data-paint-filters aria-describedby="paint-hint" onsubmit="return false">
+    <div role="tabpanel" id="paints" aria-labelledby="tab-paints" hidden>
+        <form class="filters filters-directory" data-paint-filters aria-describedby="paint-hint" onsubmit="return false">
           <h2>Filter paints</h2>
           <p id="paint-hint" class="hint">
             Tick any brands, aspects or effects. Every group you use has to match. LRV bands
@@ -233,25 +233,23 @@ const ld = {
             </div>
           </fieldset>
           <p class="hint">Effect tags are editorial labels from the file, not clinical claims.</p>
-          <button class="reset" type="button">Clear paint filters</button>
+          <button class="btn ghost reset" type="button">Clear paint filters</button>
         </form>
-        <p class="results-bar" data-paint-count aria-live="polite">
+        <p class="count" data-paint-count aria-live="polite">
           {paints.length} of {paints.length} shades
         </p>
-        <div class="results">
-          <p class="empty" data-paint-empty hidden>
-            Nothing in this launch list matches. Clear a filter or try a shorter search.
-          </p>
-          <div class="cards">
-            {paints.map((paint) => <PaintCard paint={paint} />)}
-          </div>
+        <p class="status" data-paint-empty hidden>
+          Nothing in this launch list matches. Clear a filter or try a shorter search.
+        </p>
+        <div class="grid">
+          {paints.map((paint) => <PaintCard paint={paint} />)}
         </div>
-      </div>
     </div>
     <noscript>
       <p class="hint">Filters need JavaScript. Every product and shade is still listed on this page.</p>
     </noscript>
-  </div>
+    </div>
+  </section>
   <script>
     import { initDirectory } from "../../scripts/directory.js";
     initDirectory();

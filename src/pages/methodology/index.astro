@@ -42,21 +42,26 @@ const maxGap = Math.max(
 ---
 
 <Base title="How the specs are read | Eudaspace Calm Home Directory" description={description}>
-  <article class="wrap page-intro method">
-    <nav aria-label="Breadcrumb">
-      <ol class="crumb">
-        <li><a href={base}>Home</a></li>
-        <li aria-current="page">Methodology</li>
-      </ol>
-    </nav>
-    <p class="eyebrow">Science-cautious, on purpose</p>
-    <h1>How I read these numbers</h1>
-    <p class="lede">
-      This is neurodesign, not interior design. The research behind light, sound and attention
-      is real, and I would rather understate it than dress it up. You will not get an invented
-      percentage or a wellness score for a hallway. You get the figure a maker published, the
-      evidence note stored with it, and Not published where that is the honest gap.
-    </p>
+  <section class="hero">
+    <div class="wrap">
+      <nav aria-label="Breadcrumb">
+        <ol class="crumb">
+          <li><a href={base}>Home</a></li>
+          <li aria-current="page">Methodology</li>
+        </ol>
+      </nav>
+      <p class="eyebrow">Science-cautious, on purpose</p>
+      <h1>How I read these numbers</h1>
+      <p class="lead">
+        This is neurodesign, not interior design. The research behind light, sound and attention
+        is real, and I would rather understate it than dress it up. You will not get an invented
+        percentage or a wellness score for a hallway. You get the figure a maker published, the
+        evidence note stored with it, and Not published where that is the honest gap.
+      </p>
+    </div>
+  </section>
+  <section>
+  <article class="wrap prose">
     <p>
       The pages are rendered from <code>products_launch</code> ({products.length} rows) and
       <code>paints_launch</code> ({paints.length} rows). The JSON and CSV copies of each file
@@ -238,4 +243,5 @@ const maxGap = Math.max(
       files are not turned into tracking links.
     </p>
   </article>
+  </section>
 </Base>

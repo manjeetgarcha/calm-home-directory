@@ -32,13 +32,10 @@ const aspects = orientationList(paint.orientation);
   data-glare={card.glare}
   data-psych={card.psych}
 >
-  <p class="card-kicker">
-    <span>{paint.brand}</span>
-    <span>{paint.finish_ref}</span>
-  </p>
+  <p class="tag">{paint.brand} · {paint.finish_ref}</p>
   <h3>{paint.name}</h3>
   <p class="price">LRV {formatNumber(paint.lrv)}</p>
-  <p class="note">Shade code {paint.code}</p>
+  <p class="meta">Shade code {paint.code}</p>
   <dl class="spec-list">
     <dt>LRV</dt>
     <dd>{formatNumber(paint.lrv)}</dd>
@@ -76,17 +73,17 @@ const aspects = orientationList(paint.orientation);
     Sample price {formatPrice(paint.sample_price_gbp)}.
     {paint.url_verified ? ` Link check: ${paint.url_verified}.` : ""}
   </p>
-  <div class="actions">
-    <a class="button button-primary" href={viewHref} data-affiliate-slot={slot} data-plain-url={paint.shade_url} rel="noopener noreferrer" target="_blank">
-      View product<span class="visually-hidden"> (opens in a new tab)</span>
+  <div class="btns">
+    <a class="btn" href={viewHref} data-affiliate-slot={slot} data-plain-url={paint.shade_url} rel="noopener noreferrer" target="_blank">
+      View product<span class="vh"> (opens in a new tab)</span>
     </a>
     {
       sampleHref ? (
-        <a class="button button-secondary" href={sampleHref} data-affiliate-slot={slot} data-plain-url={paint.sample_url} rel="noopener noreferrer" target="_blank">
-          Order sample<span class="visually-hidden"> (opens in a new tab)</span>
+        <a class="btn ghost" href={sampleHref} data-affiliate-slot={slot} data-plain-url={paint.sample_url} rel="noopener noreferrer" target="_blank">
+          Order sample<span class="vh"> (opens in a new tab)</span>
         </a>
       ) : (
-        <button type="button" class="button button-secondary" disabled data-affiliate-slot={slot}>
+        <button type="button" class="btn ghost" disabled data-affiliate-slot={slot}>
           Order sample
         </button>
       )

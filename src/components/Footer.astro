@@ -2,9 +2,13 @@
 const base = import.meta.env.BASE_URL;
 ---
 
-<footer class="site-footer">
+<footer>
   <div class="wrap">
-    <p class="disclosure">
+    <p>
+      <strong>Eudaspace Calm Home Directory</strong>, Calm Products, Calm Paints, and a researched
+      list of Surrey and South West London trades and advisers for sensory-comfortable homes.
+    </p>
+    <p>
       Affiliate disclosure. Product and sample links go to the plain retailer or stockist
       URLs stored in the launch files. Each link carries a data-affiliate-slot so an
       affiliate URL can be swapped in later from one config map. No affiliate IDs are
@@ -16,12 +20,18 @@ const base = import.meta.env.BASE_URL;
       ·
       <a href="https://eudaspace.co.uk" rel="noopener noreferrer">eudaspace.co.uk</a>
     </p>
-    <nav class="footer-links" aria-label="Footer">
+    <p>
       <a href={base}>Home</a>
-      <a href={`${base}products-and-paint/#products`}>Calm Products</a>
-      <a href={`${base}products-and-paint/#paints`}>Calm Paints</a>
-      <a href={`${base}trades/`}>Trades, builders &amp; architects</a>
+      ·
+      <a href={`${base}products-and-paint/#products`}>Products</a>
+      ·
+      <a href={`${base}products-and-paint/#paints`}>Paints</a>
+      ·
+      <a href={`${base}trades/`}>Trades</a>
+      ·
       <a href={`${base}methodology/`}>Methodology</a>
-    </nav>
+      ·
+      <a href="mailto:harj@eudaspace.co.uk">Work with Harj</a>
+    </p>
   </div>
 </footer>

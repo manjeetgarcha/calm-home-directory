@@ -42,20 +42,17 @@ const outcomeItems = card.outcomes.map((id) => OUTCOME_FILTERS.find((item) => it
   data-material={card.material}
   data-price={card.price}
 >
-  <p class="card-kicker">
-    <span>{product.brand}</span>
-    <span>{product.category}</span>
-  </p>
+  <p class="tag">{product.brand} · {product.category}</p>
   <h3>{product.name}</h3>
   <p class="price">{formatPrice(product.price_gbp)}</p>
-  {product.price_note && <p class="price-note">{product.price_note}</p>}
-  <p class="note">{product.subcategory}</p>
+  {product.price_note && <p class="meta">{product.price_note}</p>}
+  <p class="meta">{product.subcategory}</p>
   <ul class="chips">
     {
       outcomeItems.map((item) => (
         <li>
           <span class="chip">{item.label}</span>
-          <span class="visually-hidden">Filed as {item.source}.</span>
+          <span class="vh">Filed as {item.source}.</span>
         </li>
       ))
     }
@@ -90,17 +87,17 @@ const outcomeItems = card.outcomes.map((id) => OUTCOME_FILTERS.find((item) => it
   <blockquote class="evidence">
     <p>{product.evidence_note ? product.evidence_note : NOT_PUBLISHED}</p>
   </blockquote>
-  <div class="actions">
-    <a class="button button-primary" href={viewHref} data-affiliate-slot={slot} data-plain-url={product.url} rel="noopener noreferrer" target="_blank">
-      View product<span class="visually-hidden"> (opens in a new tab)</span>
+  <div class="btns">
+    <a class="btn" href={viewHref} data-affiliate-slot={slot} data-plain-url={product.url} rel="noopener noreferrer" target="_blank">
+      View product<span class="vh"> (opens in a new tab)</span>
     </a>
     {
       sampleHref ? (
-        <a class="button button-secondary" href={sampleHref} data-affiliate-slot={slot} data-plain-url={product.sample_url} rel="noopener noreferrer" target="_blank">
-          Order sample<span class="visually-hidden"> (opens in a new tab)</span>
+        <a class="btn ghost" href={sampleHref} data-affiliate-slot={slot} data-plain-url={product.sample_url} rel="noopener noreferrer" target="_blank">
+          Order sample<span class="vh"> (opens in a new tab)</span>
         </a>
       ) : (
-        <button type="button" class="button button-secondary" disabled data-affiliate-slot={slot}>
+        <button type="button" class="btn ghost" disabled data-affiliate-slot={slot}>
           Order sample
         </button>
       )
@@ -109,7 +106,7 @@ const outcomeItems = card.outcomes.map((id) => OUTCOME_FILTERS.find((item) => it
   {!sampleHref && <p class="note">No sample URL is published for this product.</p>}
   {
     source && (
-      <p class="source">
+      <p class="meta">
         Spec source:{" "}
         {source.href ? (
           <a href={source.href} rel="noopener noreferrer">
