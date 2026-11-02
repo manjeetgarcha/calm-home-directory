@@ -53,7 +53,7 @@ input[type=search],select{width:100%;font:inherit;padding:.7rem .8rem;border:1.5
 .card p{margin:0;font-size:.98rem}
 .note{background:var(--paper);border-left:3px solid var(--sage);padding:.55rem .8rem;font-size:.93rem;color:var(--ink-soft)}
 .card .btns{margin-top:auto;padding-top:.5rem}
-.card .btn{padding:.5rem 1rem;font-size:.95rem}
+.card .btn{padding:.5rem 1rem;font-size:.95rem;min-height:44px}
 dialog{border:1px solid var(--ink);border-radius:var(--radius);padding:0;max-width:min(680px,94vw);width:100%;color:var(--ink);background:var(--paper)}
 dialog::backdrop{background:rgba(44,44,44,.55)}
 .dlg{padding:1.5rem 1.5rem 1.75rem}

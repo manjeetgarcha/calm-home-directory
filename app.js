@@ -1,5 +1,6 @@
 (function(){
   var CONTACT="harj@eudaspace.co.uk";
+  var MAIL_SUBJECT="Enquiry%20from%20the%20Calm%20Home%20Directory";
   var list=[],state={q:"",cat:"all",area:"all"};
   var $=function(s){return document.querySelector(s)};
   var grid=$("#grid"),count=$("#count"),dlg=$("#dlg"),dlgBody=$("#dlgBody"),lastFocus=null;
@@ -21,11 +22,14 @@
       return true;
     });
   }
+  function mailHref(email){return "mailto:"+esc(email)+"?subject="+MAIL_SUBJECT}
   function card(l){
+    var emailBtn=l.email?'<a class="btn" href="'+mailHref(l.email)+'">Email</a>':"";
     return '<li><article class="card"><span class="tag">'+esc(l.category)+'</span><h3>'+esc(l.name)+'</h3>'+
       '<p class="meta">'+esc(l.town)+'</p><p>'+esc(l.description)+'</p>'+
       '<p class="note"><strong>Sensory comfort notes:</strong> '+esc(l.sensoryNote)+'</p>'+
       '<div class="btns"><button type="button" class="btn ghost" data-open="'+esc(l.slug)+'" aria-label="Details for '+esc(l.name)+'">Details</button>'+
+      emailBtn+
       '<a class="btn ghost" href="'+esc(l.website)+'" target="_blank" rel="noopener noreferrer">Website<span class="vh"> (opens in a new tab)</span></a></div></article></li>';
   }
   function render(){
@@ -40,7 +44,7 @@
     lastFocus=document.activeElement;
     var rows='<dt>Category</dt><dd>'+esc(l.category)+'</dd><dt>Area</dt><dd>'+esc(l.town)+'</dd>'+
       '<dt>Website</dt><dd><a href="'+esc(l.website)+'" target="_blank" rel="noopener noreferrer">'+esc(host(l.website))+'</a></dd>'+
-      '<dt>Email</dt><dd>'+(l.email?'<a href="mailto:'+esc(l.email)+'">'+esc(l.email)+'</a>':'Not found on their website. Please use their website.')+'</dd>'+
+      '<dt>Email</dt><dd>'+(l.email?'<a href="'+mailHref(l.email)+'">'+esc(l.email)+'</a>':'Not found on their website. Please use their website.')+'</dd>'+
       '<dt>Phone</dt><dd>'+(l.phone?'<a href="tel:'+esc(l.phone.replace(/[^+\d]/g,""))+'">'+esc(l.phone)+'</a>':'Not found on their website.')+'</dd>'+
       '<dt>About</dt><dd>'+esc(l.description)+'</dd><dt>Sensory comfort notes</dt><dd>'+esc(l.sensoryNote)+'</dd>'+
       '<dt>Researched</dt><dd>Website read on '+esc(l.reviewed)+'. Credentials, insurance and references have not yet been checked.</dd>';

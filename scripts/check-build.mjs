@@ -47,11 +47,29 @@ const trades = fs.readFileSync("dist/trades/index.html", "utf8");
 const about = fs.readFileSync("dist/trades/about.html", "utf8");
 assert(trades === fs.readFileSync("index.html", "utf8"), "published trade directory was modified");
 assert(about === fs.readFileSync("about.html", "utf8"), "published about page was modified");
-assert(fs.readFileSync("dist/trades/app.js", "utf8") === fs.readFileSync("app.js", "utf8"), "app.js changed");
-assert(fs.readFileSync("dist/trades/styles.css", "utf8") === fs.readFileSync("styles.css", "utf8"), "styles.css changed");
+const tradeApp = fs.readFileSync("app.js", "utf8");
+const tradeCss = fs.readFileSync("styles.css", "utf8");
+assert(fs.readFileSync("dist/trades/app.js", "utf8") === tradeApp, "published app.js is not a byte-for-byte copy of app.js");
+assert(fs.readFileSync("dist/trades/styles.css", "utf8") === tradeCss, "published styles.css is not a byte-for-byte copy of styles.css");
 assert(fs.readFileSync("dist/trades/data/listings.json", "utf8") === fs.readFileSync("data/listings.json", "utf8"), "listings changed");
+assert(
+  tradeApp.includes('var MAIL_SUBJECT="Enquiry%20from%20the%20Calm%20Home%20Directory"'),
+  "email subject copy missing from the copied app.js",
+);
+assert(
+  tradeApp.includes("var emailBtn=l.email?'<a class=\"btn\" href=\"'+mailHref(l.email)+'\">Email</a>':\"\""),
+  "card Email button copy missing from the copied app.js",
+);
+assert(
+  tradeApp.includes("(l.email?'<a href=\"'+mailHref(l.email)+'\">'+esc(l.email)+'</a>'"),
+  "listing modal must use the same email subject",
+);
+assert(tradeCss.includes(".card .btn{padding:.5rem 1rem;font-size:.95rem;min-height:44px}"), "card button height rule missing from the copied stylesheet");
 const listings = JSON.parse(fs.readFileSync("dist/trades/data/listings.json", "utf8"));
 assert(listings.length === 70, `expected 70 listings, got ${listings.length}`);
+const withEmail = listings.filter((listing) => listing.email).length;
+const withoutEmail = listings.length - withEmail;
+assert(withEmail === 53 && withoutEmail === 17, `expected 53 listings with an email and 17 without, got ${withEmail} and ${withoutEmail}`);
 assert(trades.includes("The Calm Home Directory"), "trade directory heading missing");
 assert(trades.includes("Find someone for your home"), "trade directory filters missing");
 assert(about.includes("How this directory is made"), "about page missing");

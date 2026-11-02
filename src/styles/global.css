@@ -470,6 +470,12 @@ abbr {
   min-width: 0;
 }
 
+.card a,
+.card p,
+.card dd {
+  overflow-wrap: anywhere;
+}
+
 .card-kicker {
   display: flex;
   justify-content: space-between;
