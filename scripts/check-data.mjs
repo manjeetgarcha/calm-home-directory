@@ -84,6 +84,30 @@ function assert(condition, message) {
 
 assert(products.length === 34, "expected 34 products");
 assert(paints.length === 30, "expected 30 paints");
+const outOfStock = products.filter((product) => String(product.stock_status || "").startsWith("Out of stock"));
+assert(
+  outOfStock.length === 1 &&
+    outOfStock[0].id === "tala-light-engine-i-e27-dim-to-warm-led-bulb" &&
+    outOfStock[0].price_gbp === 25 &&
+    outOfStock[0].stock_status === "Out of stock (checked 2026-11-02)",
+  "Tala Light Engine should stay at £25 and be the only out-of-stock product",
+);
+assert(
+  products.every(
+    (product) =>
+      product.stock_status === "In stock (checked 2026-11-02)" ||
+      product.stock_status === "Out of stock (checked 2026-11-02)",
+  ),
+  "every product needs a 2026-11-02 stock status",
+);
+assert(
+  products.filter((product) => product.brand === "Naturewall").every((product) => product.url.startsWith("https://www.naturewall.com/products/")),
+  "naturewall product URLs should use the confirmed .com destination",
+);
+assert(
+  products.some((product) => product.sample_url.startsWith("https://naturewall.co.uk/products/")),
+  "unconfirmed naturewall sample URLs should stay on .co.uk",
+);
 assertEqualFiles(products, "src/data/products_launch.csv");
 assertEqualFiles(paints, "src/data/paints_launch.csv");
 

@@ -24,6 +24,7 @@ const sampleHref = product.sample_url ? resolveHref(slot, product.sample_url) : 
 const source = splitSource(product.spec_source);
 const clash = materialGroupClash(product.material_group, product.material);
 const outcomeItems = card.outcomes.map((id) => OUTCOME_FILTERS.find((item) => item.id === id));
+const outOfStock = String(product.stock_status || "").toLowerCase().startsWith("out of stock");
 ---
 
 <article
@@ -49,6 +50,7 @@ const outcomeItems = card.outcomes.map((id) => OUTCOME_FILTERS.find((item) => it
   <h3>{product.name}</h3>
   <p class="price">{formatPrice(product.price_gbp)}</p>
   {product.price_note && <p class="price-note">{product.price_note}</p>}
+  {outOfStock && <p class="note stock-out">Out of stock at retailer</p>}
   <p class="note">{product.subcategory}</p>
   <ul class="chips">
     {
