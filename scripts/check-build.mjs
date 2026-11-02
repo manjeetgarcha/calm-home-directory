@@ -68,6 +68,8 @@ assert(pages.directory.includes('data-affiliate-slot="Tala"'), "missing Tala slo
 assert(pages.directory.includes('data-affiliate-slot="COAT"'), "missing COAT slot");
 assert(pages.directory.includes('data-affiliate-slot="Little_Greene"'), "missing Little Greene slot");
 assert(pages.directory.includes("https://tala.co.uk/products/sphere-i-e27-dim-to-warm-led-bulb"), "plain Tala URL");
+assert(pages.directory.includes("Out of stock at retailer"), "missing out of stock note");
+assert(pages.directory.includes("https://www.naturewall.com/products/slatwall-acoustic-natural-oak"), "naturewall final URL");
 assert(pages.directory.includes(">Not published<"), "missing Not published");
 assert(pages.directory.includes("Filter products"), "missing product filters");
 assert(pages.directory.includes("Filter paints"), "missing paint filters");

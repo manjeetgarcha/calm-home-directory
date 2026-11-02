@@ -498,6 +498,11 @@ abbr {
   font-size: 0.92rem;
 }
 
+.stock-out {
+  color: var(--ink);
+  font-weight: 700;
+}
+
 .chips {
   display: flex;
   flex-wrap: wrap;
