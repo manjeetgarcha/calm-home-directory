@@ -82,8 +82,8 @@ function assert(condition, message) {
   if (!condition) throw new Error(message);
 }
 
-assert(products.length === 34, "expected 34 products");
-assert(paints.length === 30, "expected 30 paints");
+assert(products.length === 41, "expected 41 products");
+assert(paints.length === 36, "expected 36 paints");
 assertEqualFiles(products, "src/data/products_launch.csv");
 assertEqualFiles(paints, "src/data/paints_launch.csv");
 
@@ -200,7 +200,7 @@ assert(
       materials: [],
       price: "any",
     }),
-  ).length === 7,
+  ).length === 8,
   "flicker under 5% count",
 );
 
@@ -217,7 +217,7 @@ assert(
       materials: [],
       price: "any",
     }),
-  ).length === 1,
+  ).length === 2,
   "search muffy",
 );
 
