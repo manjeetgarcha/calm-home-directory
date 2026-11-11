@@ -82,8 +82,8 @@ function assert(condition, message) {
   if (!condition) throw new Error(message);
 }
 
-assert(products.length === 34, "expected 34 products");
-assert(paints.length === 30, "expected 30 paints");
+assert(products.length === 41, "expected 41 products");
+assert(paints.length === 36, "expected 36 paints");
 assertEqualFiles(products, "src/data/products_launch.csv");
 assertEqualFiles(paints, "src/data/paints_launch.csv");
 
@@ -134,7 +134,7 @@ const sleep = cards.filter((card) =>
     price: "any",
   }),
 );
-assert(sleep.length === 17, `sleep support count ${sleep.length}`);
+assert(sleep.length === 20, `sleep support count ${sleep.length}`);
 
 const warm = cards.filter((card) =>
   matchProduct(card, {
@@ -200,7 +200,7 @@ assert(
       materials: [],
       price: "any",
     }),
-  ).length === 7,
+  ).length === 9,
   "flicker under 5% count",
 );
 
@@ -223,6 +223,8 @@ assert(
 
 const fitting = cards.filter((card) => card.voc === "fitting-note");
 assert(fitting.length === 1, "expected one low-VOC fitting note");
+const certified = cards.filter((card) => card.voc === "certified");
+assert(certified.length === 1, "expected one named VOC certificate");
 assert(displayText("unknown").includes("Not published"), "unknown display");
 assert(displayText("unknown (fitting uses low-VOC adhesive advice)").startsWith("Not published"), "voc display");
 assert(displayText(null) === "Not published", "null display");
@@ -237,7 +239,7 @@ const toad = paintCards.filter((card) =>
     psych: [],
   }),
 );
-assert(toad.length === 1 && toad[0].brand === "Little Greene", "Little Greene glare 1");
+assert(toad.length === 3 && toad.every((card) => card.brand === "Little Greene"), "Little Greene glare 1");
 
 const north = paintCards.filter((card) =>
   matchPaint(card, {

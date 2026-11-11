@@ -64,11 +64,20 @@ export function outcomeIds(outcomes) {
 
 export function flickerKind(flicker) {
   if (typeof flicker === "string" && flicker.includes("<5%")) return "under-5";
+  if (typeof flicker === "string" && flicker.trim() && !/^unknown\b/i.test(flicker.trim())) return "published";
   return "unpublished";
 }
 
 export function vocKind(voc) {
   if (typeof voc === "string" && /low-voc adhesive/i.test(voc)) return "fitting-note";
+  if (
+    typeof voc === "string" &&
+    voc.trim() &&
+    !/^unknown\b/i.test(voc.trim()) &&
+    /certified|indoor air comfort|ecolabel/i.test(voc)
+  ) {
+    return "certified";
+  }
   return "unpublished";
 }
 

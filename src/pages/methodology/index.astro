@@ -68,7 +68,8 @@ const maxGap = Math.max(
       A blank, a null, or the word “unknown” in the launch file is shown as Not published.
       I do not guess Kelvin, CRI, flicker, NRC, αw or a VOC certificate. The one VOC cell that
       says unknown and then mentions low-VOC adhesive advice is shown as Not published, with
-      that note kept. It is not a certificate.
+      that note kept. It is not a certificate. Where a product page or data sheet names a
+      certificate, the card prints that name. A certificate is not a health claim.
     </p>
 
     <h2>Outcome names</h2>
@@ -102,9 +103,12 @@ const maxGap = Math.max(
       published, it only matches “Kelvin not published”.
     </p>
     <p>
-      CRI is shown only when the file has a number. The flicker filter called “under 5%” matches
-      the rows whose flicker cell contains “&lt;5%”. Some of those makers also say flicker-free.
-      A cell that only says unknown is not treated as flicker-free.
+      CRI is shown only when the file has a number. A page that says “90+” and does not give a
+      single integer stays Not published in the CRI cell, and the wording is kept in the spec line.
+      The flicker filter called “under 5%” matches the rows whose flicker cell contains “&lt;5%”.
+      Some of those makers also say flicker-free. A cell that only says unknown is not treated as
+      flicker-free. A published flicker figure that does not use that phrase is shown on the card
+      and is not treated as under 5%.
     </p>
     <p>
       Acoustic filters use NRC and αw. Almost every product has neither. I do not turn “not
