@@ -59,6 +59,7 @@ export const ACOUSTIC_OPTIONS = [
 
 export const VOC_OPTIONS = [
   { id: "any", label: "Any VOC note" },
+  { id: "certified", label: "Named certificate published" },
   { id: "unpublished", label: "No VOC certificate published" },
   { id: "fitting-note", label: "Low-VOC fitting note only (not a certificate)" },
 ];

@@ -19,6 +19,12 @@ export const affiliateSlots = {
   Alpine: "",
   COAT: "",
   Little_Greene: "",
+  BANZ: "",
+  "Edz Kidz": "",
+  Loop: "",
+  Osmo: "",
+  "GIK Acoustics": "",
+  Benjamin_Moore: "",
 };
 
 export function resolveHref(slot, plainUrl) {
