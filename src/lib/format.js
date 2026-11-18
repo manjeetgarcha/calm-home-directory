@@ -69,6 +69,7 @@ export function flickerKind(flicker) {
 
 export function vocKind(voc) {
   if (typeof voc === "string" && /low-voc adhesive/i.test(voc)) return "fitting-note";
+  if (typeof voc === "string" && /certified/i.test(voc) && !/^unknown\b/i.test(voc.trim())) return "certified";
   return "unpublished";
 }
 
