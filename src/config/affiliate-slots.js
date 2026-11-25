@@ -4,7 +4,7 @@
  * the href of every link with that data-affiliate-slot.
  *
  * No affiliate IDs are configured. Paint slot names match affiliate_link_slot
- * in paints_launch (COAT, Little_Greene). Product slots are the brand field.
+ * in paints_launch (COAT, Little_Greene, Benjamin_Moore). Product slots are the brand field.
  */
 export const affiliateSlots = {
   Tala: "",
@@ -19,6 +19,12 @@ export const affiliateSlots = {
   Alpine: "",
   COAT: "",
   Little_Greene: "",
+  "3M": "",
+  BANZ: "",
+  "GIK Acoustics": "",
+  Ecophon: "",
+  Graphenstone: "",
+  Benjamin_Moore: "",
 };
 
 export function resolveHref(slot, plainUrl) {
