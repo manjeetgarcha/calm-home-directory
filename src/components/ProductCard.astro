@@ -72,7 +72,7 @@ const outcomeItems = card.outcomes.map((id) => OUTCOME_FILTERS.find((item) => it
     <dt><abbr title="alpha w, weighted sound absorption">αw</abbr></dt>
     <dd class={card.alphaW === null ? "missing" : undefined}>{formatNumber(product.alpha_w)}</dd>
     <dt>VOC</dt>
-    <dd class="missing">{displayText(product.voc_cert)}</dd>
+    <dd class={card.voc === "unpublished" ? "missing" : undefined}>{displayText(product.voc_cert)}</dd>
     <dt>Material</dt>
     <dd>{product.material}</dd>
     <dt>Group filed</dt>
